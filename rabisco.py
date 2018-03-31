@@ -8,8 +8,7 @@ from pathlib import Path
 import click
 from slugify import slugify
 
-
-EDITOR = os.environ.get('EDITOR', 'vim')
+DATETIME_FORMAT = '%y%m%d%H%M%S'
 
 
 def get_default_path():
@@ -17,12 +16,14 @@ def get_default_path():
 
 
 class Rabisco:
+    editor = os.environ.get('EDITOR', 'vim')
+
     def __init__(self, path):
         self.path = Path(path)
         self.path.mkdir(exist_ok=True)
 
     def open_editor(self, filename):
-        call([EDITOR, filename])
+        call([self.editor, filename])
 
     def note_from_editor(self):
         with tempfile.NamedTemporaryFile(mode='w+', suffix='.md') as f:
@@ -31,7 +32,7 @@ class Rabisco:
 
     def now(self):
         now = datetime.now()
-        return now.strftime('%y%m%d%H%M')
+        return now.strftime(DATETIME_FORMAT)
 
     def filename_from_content(self, content):
         partial = slugify(content[:42], separator='_')
@@ -57,5 +58,16 @@ class Rabisco:
 
     def ls(self):
         files = os.listdir(str(self.path))
-        for f in files:
-            click.echo(f)
+        for i, name in enumerate(files):
+
+            filename = self.path / name
+            with filename.open('r') as f:
+                content = f.readline(40)
+
+            if content[-1] == '\n':
+                content = content[:-1]
+
+            click.echo('{index}: {filename}'.format(
+                index=click.style(str(i), fg='cyan'),
+                filename=content
+            ))
