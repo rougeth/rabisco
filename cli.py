@@ -28,3 +28,10 @@ def ls(rabisco):
 @click.pass_obj
 def rm(rabisco, id):
     rabisco.rm(id)
+
+
+@cli.command()
+@click.argument('id', type=click.INT)
+@click.pass_obj
+def open(rabisco, id):
+    rabisco.open(id)
