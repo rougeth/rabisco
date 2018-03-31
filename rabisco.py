@@ -1,6 +1,7 @@
 import os
 import tempfile
 import sys
+from datetime import datetime
 from subprocess import call
 from pathlib import Path
 
@@ -20,21 +21,35 @@ class Rabisco:
         self.path = Path(path)
         self.path.mkdir(exist_ok=True)
 
-    def _open_editor(self, filename):
+    def open_editor(self, filename):
         call([EDITOR, filename])
 
-    def _edit_note(self):
-        with tempfile.NamedTemporaryFile(mode='w+') as f:
-            self._open_editor(f.name)
+    def note_from_editor(self):
+        with tempfile.NamedTemporaryFile(mode='w+', suffix='.md') as f:
+            self.open_editor(f.name)
             return f.read()
 
+    def now(self):
+        now = datetime.now()
+        return now.strftime('%y%m%d%H%M')
+
+    def filename_from_content(self, content):
+        partial = slugify(content[:42], separator='_')
+        now = self.now()
+        filename = '{datetime}_{partial_name}.md'.format(
+            datetime=now,
+            partial_name=partial
+        )
+
+        return self.path / filename
+
     def mk(self):
-        content = self._edit_note()
+        content = self.note_from_editor()
         if not content:
             click.echo('Aborted')
             sys.exit(1)
 
-        filename = self.path / slugify(content[:40], separator='_')
+        filename = self.filename_from_content(content)
         with filename.open('w') as f:
             f.write(content)
 
