@@ -24,6 +24,7 @@ def ls(rabisco):
 
 
 @cli.command()
+@click.argument('id', type=click.INT)
 @click.pass_obj
-def rm(rabisco):
-    click.echo('Remove a note')
+def rm(rabisco, id):
+    rabisco.rm(id)
