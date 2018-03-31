@@ -27,7 +27,3 @@ def ls(rabisco):
 @click.pass_obj
 def rm(rabisco):
     click.echo('Remove a note')
-
-
-if __name__ == '__main__':
-    cli()

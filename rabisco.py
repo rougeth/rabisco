@@ -56,18 +56,28 @@ class Rabisco:
 
         click.echo('saved')
 
+    def list_notes(self):
+        notes = []
+        for note in self.path.iterdir():
+            with note.open() as f:
+                title = f.readline()
+                if title[-1] == '\n':
+                    title = title[:-1]
+
+            created_at = note.name.split('_')[0]
+
+            notes.append({
+                'datetime': datetime.strptime(created_at, DATETIME_FORMAT),
+                'title': title,
+            })
+
+        return sorted(notes, key=lambda x: x['datetime'])
+
     def ls(self):
-        files = os.listdir(str(self.path))
-        for i, name in enumerate(files):
+        notes = self.list_notes()
 
-            filename = self.path / name
-            with filename.open('r') as f:
-                content = f.readline(40)
-
-            if content[-1] == '\n':
-                content = content[:-1]
-
-            click.echo('{index}: {filename}'.format(
-                index=click.style(str(i), fg='cyan'),
-                filename=content
+        for index, note in enumerate(notes):
+            click.echo('{index}: {title}'.format(
+               index=click.style(str(index), fg='cyan'),
+               title=note['title'],
             ))
