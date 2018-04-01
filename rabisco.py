@@ -70,7 +70,7 @@ class Rabisco:
             notes[index] = {
                 'datetime': datetime.strptime(created_at, DATETIME_FORMAT),
                 'title': title,
-                'filename': note,
+                'file': note,
             }
 
             index += 1
@@ -97,10 +97,19 @@ class Rabisco:
 
     def open(self, id):
         note = self.get_or_error(id)
-        note_file = str(note['filename'])
+        note_file = str(note['file'])
         self.open_editor(note_file)
+
+    def cat(self, id):
+        note = self.get_or_error(id)
+        with note['file'].open() as f:
+            content = f.read()
+            if content[-1] == '\n':
+                content = content[:-1]
+
+            click.echo(content)
 
     def rm(self, id):
         note = self.get_or_error(id)
-        note_file = str(note['filename'])
+        note_file = str(note['file'])
         os.remove(note_file)

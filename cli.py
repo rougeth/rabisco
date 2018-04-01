@@ -40,3 +40,11 @@ def rm(rabisco, id):
 def open(rabisco, id):
     """Open a note to edition"""
     rabisco.open(id)
+
+
+@cli.command()
+@click.argument('id', type=click.INT)
+@click.pass_obj
+def cat(rabisco, id):
+    """Read note content"""
+    rabisco.cat(id)
