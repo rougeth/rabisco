@@ -1,9 +1,9 @@
 import os
-import tempfile
 import sys
+import tempfile
 from datetime import datetime
-from subprocess import call
 from pathlib import Path
+from subprocess import call
 
 import click
 from slugify import slugify
@@ -47,14 +47,14 @@ class Rabisco:
     def mk(self):
         content = self.note_from_editor()
         if not content:
-            click.echo('Aborted')
+            click.secho('Aborted', fg='yellow')
             sys.exit(1)
 
         filename = self.filename_from_content(content)
         with filename.open('w') as f:
             f.write(content)
 
-        click.echo('saved')
+        click.secho('Note created', fg='green')
 
     def list_notes(self):
         notes = {}
