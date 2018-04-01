@@ -15,6 +15,13 @@ def get_default_path():
     return str(Path.home() / '.rabisco')
 
 
+def remove_last_newline(content):
+    if content[-1] == '\n':
+        content = content[:-1]
+
+    return content
+
+
 class Rabisco:
     editor = os.environ.get('EDITOR', 'vim')
 
@@ -62,8 +69,7 @@ class Rabisco:
         for note in sorted(self.path.iterdir()):
             with note.open() as f:
                 title = f.readline()
-                if title[-1] == '\n':
-                    title = title[:-1]
+                title = remove_last_newline(title)
 
             created_at = note.name.split('_')[0]
 
@@ -104,10 +110,9 @@ class Rabisco:
         note = self.get_or_error(id)
         with note['file'].open() as f:
             content = f.read()
-            if content[-1] == '\n':
-                content = content[:-1]
 
-            click.echo(content)
+        content = remove_last_newline(content)
+        click.echo(content)
 
     def rm(self, id):
         note = self.get_or_error(id)

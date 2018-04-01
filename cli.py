@@ -1,5 +1,3 @@
-from pathlib import Path
-
 import click
 from rabisco import Rabisco, get_default_path
 
