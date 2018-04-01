@@ -86,22 +86,21 @@ class Rabisco:
                title=note['title'],
             ))
 
-    def open(self, id):
+    def get_or_error(self, id):
         notes = self.list_notes()
+
         try:
-            note_file = str(notes[id]['filename'])
+            return notes[id]
         except KeyError:
             click.secho('Note %s not found' % id, fg='red')
             sys.exit(1)
 
+    def open(self, id):
+        note = self.get_or_error(id)
+        note_file = str(note['filename'])
         self.open_editor(note_file)
 
     def rm(self, id):
-        notes = self.list_notes()
-        try:
-            note_file = notes[id]['filename']
-        except KeyError:
-            click.secho('Note %s not found' % id, fg='red')
-            sys.exit(1)
-
-        os.remove(str(note_file))
+        note = self.get_or_error(id)
+        note_file = str(note['filename'])
+        os.remove(note_file)
