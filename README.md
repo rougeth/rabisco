@@ -26,3 +26,8 @@ Commands:
   rm    Remove a note
 
 ```
+
+## Changelog
+
+**0.2.0**:
+- Add `rabisco` command;
