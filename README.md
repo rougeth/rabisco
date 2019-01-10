@@ -10,7 +10,7 @@ $ pip install rabisco
 ## Help
 
 ```
-Usage: r [OPTIONS] COMMAND [ARGS]...
+Usage: rabisco [OPTIONS] COMMAND [ARGS]...
 
   Rabisco
 
